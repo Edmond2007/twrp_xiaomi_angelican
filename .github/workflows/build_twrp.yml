@@ -1,0 +1,32 @@
+name: Build TWRP for Redmi 9C NFC
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180  # Увеличьте, если сборка долгая
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up environment
+        run: |
+          sudo apt update
+          sudo apt install -y repo git python3
+
+      - name: Make build.sh executable
+        run: chmod +x build.sh
+
+      - name: Run build script
+        run: ./build.sh
+
+      - name: Upload TWRP image
+        uses: actions/upload-artifact@v3
+        with:
+          name: TWRP_angelica
+          path: platform_manifest_twrp_omni/out/target/product/angelica/TWRP_*.zip

@@ -13,7 +13,7 @@ repo init --depth=1 -u https://github.com/minimal-manifest-twrp/platform_manifes
 repo sync -j$(nproc) --force-sync --no-clone-bundle --no-tags
 
 # Клонирование дерева устройств для Redmi 9C NFC (пример, нужно найти актуальное)
-git clone https://github.com/Edmond2007/twrp_xiaomi_angelican.git device/xiaomi/angelica
+git clone https://github.com/twrpdtgen/android_device_xiaomi_angelican.git device/xiaomi/angelica
 
 # Запуск сборки
 source build/envsetup.sh

@@ -22,12 +22,12 @@ if [ ! -d "platform_manifest_twrp_omni" ]; then
 fi
 cd platform_manifest_twrp_omni
 
-repo init --depth=1 -u https://github.com/minimal-manifest-twrp/platform_manifest_twrp_omni.git -b twrp-12.1
+repo init --depth=1 -u https://github.com/minimal-manifest-twrp/platform_manifest_twrp_omni.git -b twrp-9.0
 repo sync -j$(nproc) --force-sync --no-clone-bundle --no-tags
 
 echo "Клонирование дерева устройства..."
 if [ ! -d "device/xiaomi/angelican" ]; then
-    git clone https://github.com/Edmond2007/android_device_xiaomi_angelican.git -b twrp-12.1 device/xiaomi/angelican
+    git clone https://github.com/Edmond2007/android_device_xiaomi_angelican.git -b twrp-9.0 device/xiaomi/angelican
 fi
 
 echo "Запуск сборки..."

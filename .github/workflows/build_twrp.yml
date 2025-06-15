@@ -1,0 +1,59 @@
+name: Build TWRP for Redmi 9C NFC
+
+on:
+  workflow_dispatch:  # Ручной запуск
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04  # Используем проверенную версию
+    timeout-minutes: 360   # 6 часов максимально
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Полная история для repo
+
+      - name: Set up environment
+        run: |
+          sudo apt-get update -y
+          sudo dpkg --add-architecture i386
+          sudo apt-get install -y \
+            git-core gnupg flex bison build-essential zip \
+            zlib1g-dev gcc-multilib g++-multilib libc6-dev-i386 \
+            lib32ncurses5-dev lib32z1-dev x11proto-core-dev \
+            libx11-dev libgl1-mesa-dev libxml2-utils xsltproc \
+            unzip fontconfig python3 rsync curl ccache repo p7zip-full \
+            imagemagick bc gperf
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "Edmond2007"
+          git config --global user.email "edmondseropyan6@gmail.com"
+
+      - name: Make build.sh executable
+        run: chmod +x build.sh
+
+      - name: Run build script
+        run: |
+          export USE_CCACHE=1
+          export CCACHE_EXEC=/usr/bin/ccache
+          ccache -M 50G
+          ./build.sh
+
+      - name: Upload TWRP image
+        uses: actions/upload-artifact@v4
+        with:
+          name: TWRP_angelica
+          path: platform_manifest_twrp_omni/out/target/product/angelica/TWRP_*.zip
+          retention-days: 7
+          if-no-files-found: error
+
+      - name: Clean up
+        if: always()
+        run: |
+          rm -rf platform_manifest_twrp_omni/.repo
+          ccache -C
+          sudo apt-get autoremove -y

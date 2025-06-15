@@ -18,7 +18,7 @@ ccache -M 50G
 
 echo "Инициализация репозитория TWRP..."
 if [ ! -d "platform_manifest_twrp_omni" ]; then
-    git clone https://github.com/minimal-manifest-twrp/platform_manifest_twrp_omni.git -b twrp-12.1
+    git clone https://github.com/minimal-manifest-twrp/platform_manifest_twrp_omni.git -b twrp-9.0
 fi
 cd platform_manifest_twrp_omni
 

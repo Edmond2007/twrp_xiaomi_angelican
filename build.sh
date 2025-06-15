@@ -1,7 +1,6 @@
 #!/bin/bash
-set -e  # Прерывать выполнение при ошибках
+set -e
 
-# Установка зависимостей
 echo "Установка зависимостей..."
 sudo apt-get update -y
 sudo apt-get install -y \
@@ -12,13 +11,11 @@ sudo apt-get install -y \
     unzip fontconfig python3 rsync curl ccache repo p7zip-full \
     imagemagick bc gperf
 
-# Настройка окружения
 echo "Настройка окружения..."
 export USE_CCACHE=1
 export CCACHE_EXEC=/usr/bin/ccache
 ccache -M 50G
 
-# Клонирование и инициализация репозитория TWRP
 echo "Инициализация репозитория TWRP..."
 if [ ! -d "platform_manifest_twrp_omni" ]; then
     git clone https://github.com/minimal-manifest-twrp/platform_manifest_twrp_omni.git -b twrp-12.1
@@ -28,25 +25,22 @@ cd platform_manifest_twrp_omni
 repo init --depth=1 -u https://github.com/minimal-manifest-twrp/platform_manifest_twrp_omni.git -b twrp-12.1
 repo sync -j$(nproc) --force-sync --no-clone-bundle --no-tags
 
-# Клонирование дерева устройства
 echo "Клонирование дерева устройства..."
-if [ ! -d "device/xiaomi/angelica" ]; then
-    git clone https://github.com/twrpdtgen/android_device_xiaomi_angelica.git device/xiaomi/angelica
+if [ ! -d "device/xiaomi/angelican" ]; then
+    git clone https://github.com/Edmond2007/android_device_xiaomi_angelican.git -b twrp-12.1 device/xiaomi/angelican
 fi
 
-# Сборка TWRP
 echo "Запуск сборки..."
 source build/envsetup.sh
-lunch omni_angelica-eng
+lunch omni_angelican-eng
 mka recoveryimage -j$(nproc)
 
-# Архивирование recovery.img
 echo "Создание архива..."
-cd out/target/product/angelica
+cd out/target/product/angelican
 if [ -f "recovery.img" ]; then
-    zip -r9 "TWRP_angelica_$(date +%Y%m%d).zip" recovery.img
+    zip -r9 "TWRP_angelican_$(date +%Y%m%d).zip" recovery.img
     echo "Сборка успешно завершена!"
-    echo "Артефакт: $(pwd)/TWRP_angelica_$(date +%Y%m%d).zip"
+    echo "Артефакт: $(pwd)/TWRP_angelican_$(date +%Y%m%d).zip"
 else
     echo "Ошибка: recovery.img не найден!"
     exit 1
